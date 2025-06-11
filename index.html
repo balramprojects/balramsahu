@@ -2,15 +2,80 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Balram Codes - A tech blog sharing PHP, APIs, and developer tools." />
+    <title>Balram Codes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f9f9f9;
+            color: #333;
+        }
+
+        h1 {
+            color: #1b315d;
+        }
+
+        .post {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        code {
+            background: #eee;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #888;
+        }
+
+        a {
+            color: #1b315d;
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body>
+    <h1>👨‍💻 Balram Codes</h1>
+    <p>Welcome to my tech blog where I share code snippets, APIs, and free developer tools. Updated regularly!</p>
 
-    <h1>Hello World</h1>
+    <div class="post">
+        <h2>📌 How to Send OTP Using PHP & SendGrid</h2>
+        <p>In this guide, I'll show you how to send a 6-digit OTP via email using SendGrid and PHP.</p>
+        <code>
+    $otp = rand(100000, 999999);
+    </code>
+        <p><a href="#">Read More →</a></p>
+    </div>
 
+    <div class="post">
+        <h2>🧩 Free APIs Every Developer Should Know</h2>
+        <p>These APIs are free, useful, and production-ready: OpenWeather, IPinfo, NewsAPI, and more.</p>
+        <p><a href="#">Explore the List →</a></p>
+    </div>
+
+    <div class="post">
+        <h2>⚡ PHP Tip: Secure User Input Without a Framework</h2>
+        <p>Use <code>htmlspecialchars()</code> and <code>filter_var()</code> to prevent XSS and validate data.</p>
+        <p><a href="#">Learn How →</a></p>
+    </div>
+
+    <div class="footer">
+        Made with ❤️ by Balram · <a href="https://github.com/balramsahu">GitHub</a>
+    </div>
 </body>
 
 </html>
