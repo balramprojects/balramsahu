@@ -52,30 +52,39 @@
     <h1>👨‍💻 Balram Codes</h1>
     <p>Welcome to my tech blog where I share code snippets, APIs, and free developer tools. Updated regularly!</p>
 
-    <div class="post">
-        <h2>📌 How to Send OTP Using PHP & SendGrid</h2>
-        <p>In this guide, I'll show you how to send a 6-digit OTP via email using SendGrid and PHP.</p>
-        <code>
-    $otp = rand(100000, 999999);
-    </code>
-        <p><a href="#">Read More →</a></p>
-    </div>
-
-    <div class="post">
-        <h2>🧩 Free APIs Every Developer Should Know</h2>
-        <p>These APIs are free, useful, and production-ready: OpenWeather, IPinfo, NewsAPI, and more.</p>
-        <p><a href="#">Explore the List →</a></p>
-    </div>
-
-    <div class="post">
-        <h2>⚡ PHP Tip: Secure User Input Without a Framework</h2>
-        <p>Use <code>htmlspecialchars()</code> and <code>filter_var()</code> to prevent XSS and validate data.</p>
-        <p><a href="#">Learn How →</a></p>
+    <div id="live-score"
+        style="background: #fffbe6; padding: 15px; border-radius: 10px; margin: 20px 0; font-family: sans-serif;">
+        <strong>🏏 Live Match Score:</strong>
+        <div id="score-text">Loading...</div>
     </div>
 
     <div class="footer">
         Made with ❤️ by Balram · <a href="https://github.com/balramsahu">GitHub</a>
     </div>
+
+    <script>
+        async function loadScore() {
+            const url = "https://cricbuzz-cricket.p.rapidapi.com/mcenter/v1/40381/scard"; // example match
+            const options = {
+                method: 'GET',
+                headers: {
+                    'X-RapidAPI-Key': 'demo', // You can sign up for free on RapidAPI to get your key
+                    'X-RapidAPI-Host': 'cricbuzz-cricket.p.rapidapi.com'
+                }
+            };
+
+            try {
+                const res = await fetch(url, options);
+                const data = await res.json();
+                document.getElementById("score-text").innerText = `IND: ${data.scoreCard[0].scoreDetails.runs}/${data.scoreCard[0].scoreDetails.wickets} (${data.scoreCard[0].scoreDetails.overs} ov)`;
+            } catch (err) {
+                document.getElementById("score-text").innerText = "Unable to load live score.";
+            }
+        }
+
+        loadScore();
+        setInterval(loadScore, 30000); // refresh every 30 sec
+    </script>
 </body>
 
 </html>
