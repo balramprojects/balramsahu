@@ -59,22 +59,36 @@
                     return;
                 }
 
+                // Find a match that has started and has a score
                 const match = data.data.find(m => m.matchStarted);
+
                 if (!match) {
-                    document.getElementById("live-score").innerHTML = "⚠️ No live match started yet.";
+                    document.getElementById("live-score").innerHTML = "⚠️ No match started yet.";
                     return;
                 }
 
-                const team1 = match.teamInfo[0]?.name || "Team 1";
-                const team2 = match.teamInfo[1]?.name || "Team 2";
-                const status = match.status;
-                const score = match.score?.map(s => `${s.inning}: ${s.runs}/${s.wickets} in ${s.overs} ov`).join("<br>") || "Score unavailable";
+                const team1 = match.teamInfo?.[0]?.name || match.teams?.[0] || "Team 1";
+                const team2 = match.teamInfo?.[1]?.name || match.teams?.[1] || "Team 2";
+                const status = match.status || "Match ongoing";
+                let scoreHTML = "";
+
+                if (match.score && match.score.length > 0) {
+                    scoreHTML = match.score.map(s => {
+                        const inning = s.inning || "Inning";
+                        const runs = s.runs ?? "N/A";
+                        const wkts = s.wickets ?? "N/A";
+                        const overs = s.overs ?? "N/A";
+                        return `${inning}: ${runs}/${wkts} in ${overs} ov`;
+                    }).join("<br>");
+                } else {
+                    scoreHTML = "<em>Live score data not available yet.</em>";
+                }
 
                 document.getElementById("live-score").innerHTML = `
-          <strong>${team1} vs ${team2}</strong><br>
-          <em>${status}</em><br><br>
-          ${score}
-        `;
+        <strong>${team1} vs ${team2}</strong><br>
+        <em>${status}</em><br><br>
+        ${scoreHTML}
+      `;
             } catch (err) {
                 document.getElementById("live-score").innerHTML = "❌ Failed to fetch live score.";
                 console.error(err);
@@ -84,6 +98,7 @@
         fetchLiveScore();
         setInterval(fetchLiveScore, 30000); // refresh every 30 sec
     </script>
+
 
     <div class="footer">
         Made with ❤️ by Balram | Powered by <a href="https://cricapi.com" target="_blank">CricAPI</a>
