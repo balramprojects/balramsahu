@@ -4,35 +4,28 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Balram Codes - A tech blog sharing PHP, APIs, and developer tools." />
-    <title>Balram Codes</title>
+    <meta name="description" content="Live Cricket Scores - Powered by CricAPI">
+    <title>Live Cricket Score | Balram Codes</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            background: #f5f7fa;
+            color: #222;
             max-width: 800px;
-            margin: 0 auto;
+            margin: auto;
             padding: 20px;
-            background: #f9f9f9;
-            color: #333;
         }
 
         h1 {
             color: #1b315d;
         }
 
-        .post {
-            background: white;
+        #live-score {
+            background: #fff9e6;
             padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-        }
-
-        code {
-            background: #eee;
-            padding: 2px 4px;
-            border-radius: 4px;
-            font-family: monospace;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
         }
 
         .footer {
@@ -40,51 +33,62 @@
             margin-top: 40px;
             color: #888;
         }
-
-        a {
-            color: #1b315d;
-            text-decoration: none;
-        }
     </style>
 </head>
 
 <body>
-    <h1>👨‍💻 Balram Codes</h1>
-    <p>Welcome to my tech blog where I share code snippets, APIs, and free developer tools. Updated regularly!</p>
 
-    <div id="live-score"
-        style="background: #fffbe6; padding: 15px; border-radius: 10px; margin: 20px 0; font-family: sans-serif;">
-        <strong>🏏 Live Match Score:</strong>
-        <div id="score-text">Loading...</div>
-    </div>
+    <h1>🏏 Balram's Live Cricket Blog</h1>
+    <p>Welcome! Here’s the latest live cricket score fetched using CricAPI (Free Tier).</p>
 
-    <div class="footer">
-        Made with ❤️ by Balram · <a href="https://github.com/balramsahu">GitHub</a>
+    <div id="live-score">
+        <strong>Fetching live match data...</strong>
     </div>
 
     <script>
-        async function loadScore() {
-            const url = "https://cricbuzz-cricket.p.rapidapi.com/mcenter/v1/40381/scard"; // example match
-            const options = {
-                method: 'GET',
-                headers: {
-                    'X-RapidAPI-Key': '24a372c2-1ebb-47b6-9dca-48eeb497b09e', // You can sign up for free on RapidAPI to get your key
-                    'X-RapidAPI-Host': 'https://api.cricapi.com/'
-                }
-            };
+        const apiKey = "24a372c2-1ebb-47b6-9dca-48eeb497b09e";
+        const apiUrl = `https://api.cricapi.com/v1/currentMatches?apikey=${apiKey}&offset=0`;
 
+        async function fetchLiveScore() {
             try {
-                const res = await fetch(url, options);
+                const res = await fetch(apiUrl);
                 const data = await res.json();
-                document.getElementById("score-text").innerText = `IND: ${data.scoreCard[0].scoreDetails.runs}/${data.scoreCard[0].scoreDetails.wickets} (${data.scoreCard[0].scoreDetails.overs} ov)`;
+
+                if (!data || !data.data || data.data.length === 0) {
+                    document.getElementById("live-score").innerHTML = "⚠️ No live matches at the moment.";
+                    return;
+                }
+
+                const match = data.data.find(m => m.matchStarted);
+                if (!match) {
+                    document.getElementById("live-score").innerHTML = "⚠️ No live match started yet.";
+                    return;
+                }
+
+                const team1 = match.teamInfo[0]?.name || "Team 1";
+                const team2 = match.teamInfo[1]?.name || "Team 2";
+                const status = match.status;
+                const score = match.score?.map(s => `${s.inning}: ${s.runs}/${s.wickets} in ${s.overs} ov`).join("<br>") || "Score unavailable";
+
+                document.getElementById("live-score").innerHTML = `
+          <strong>${team1} vs ${team2}</strong><br>
+          <em>${status}</em><br><br>
+          ${score}
+        `;
             } catch (err) {
-                document.getElementById("score-text").innerText = "Unable to load live score.";
+                document.getElementById("live-score").innerHTML = "❌ Failed to fetch live score.";
+                console.error(err);
             }
         }
 
-        loadScore();
-        setInterval(loadScore, 30000); // refresh every 30 sec
+        fetchLiveScore();
+        setInterval(fetchLiveScore, 30000); // refresh every 30 sec
     </script>
+
+    <div class="footer">
+        Made with ❤️ by Balram | Powered by <a href="https://cricapi.com" target="_blank">CricAPI</a>
+    </div>
+
 </body>
 
 </html>
